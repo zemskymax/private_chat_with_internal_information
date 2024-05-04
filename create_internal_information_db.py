@@ -31,10 +31,10 @@ def process_internal_information():
         docs = loader.load()
         total_internal_documents = total_internal_documents + docs
         print(f"File #{file_counter} contains {len(docs)} pages (documents)")
-    
+
     print(f"Total internal pages (documents) = {len(total_internal_documents)}")
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1024, chunk_overlap=100, length_function=len, is_separator_regex=False)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1024, chunk_overlap=64, length_function=len, is_separator_regex=False)
     total_internal_chunks = text_splitter.split_documents(total_internal_documents)
     print(f"Total internal chunks = {len(total_internal_chunks)}")
 
@@ -43,15 +43,13 @@ def process_internal_information():
     vector_store = Chroma.from_documents(documents=total_internal_chunks, embedding=embedding, persist_directory=INTERNAL_DATABASE_FOLDER)
     vector_store.persist()
 
-    # return response
-
 #-----------------------#
 
-def main():
+def main() -> int:
     print("-MAIN-")
 
     process_internal_information()
-    
+
     return 0
 
 if __name__ == '__main__':
